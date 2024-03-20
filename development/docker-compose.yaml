@@ -1,0 +1,37 @@
+services:
+  api:
+    build:
+      context: .
+    environment:
+      CARGO_TARGET_DIR: /tmp/target
+      CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+    volumes:
+      - ../apps/api:/app
+      - sample_db_cargo_cache:/usr/local/cargo/registry
+      - sample_db_target_cache:/tmp/target
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    tty: true
+    working_dir: /app
+    security_opt:
+      - seccomp:unconfined
+
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=web
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - TZ=Asia/Tokyo
+      - PGTZ=Asia/Tokyo
+    ports:
+      - 5432:5432
+    volumes:
+      - sample_db_postgresql_data:/var/lib/postgresql/data
+
+volumes:
+  sample_db_postgresql_data:
+  sample_db_cargo_cache:
+  sample_db_target_cache:
