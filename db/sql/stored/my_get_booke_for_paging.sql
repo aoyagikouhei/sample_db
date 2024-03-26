@@ -19,6 +19,8 @@ BEGIN
     public.books AS t1
   WHERE
     p_title IS NULL OR title LIKE p_title
+  ORDER BY
+    t1.created_at
   LIMIT
     p_limit
   OFFSET
